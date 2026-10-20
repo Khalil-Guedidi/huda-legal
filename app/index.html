@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Huda — adhkar du matin et du soir</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 520px; margin: 0 auto; padding: 56px 24px;
+    line-height: 1.65; color: #1a1611; background: #f7f3ec; text-align: center;
+  }
+  h1 { color: #b8952f; font-size: 2rem; margin: 0 0 .2em; }
+  .sub { color: #7a746a; margin-top: 0; }
+  .stores { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+  .store {
+    display: block; padding: 14px 20px; border-radius: 12px; font-weight: 600;
+    text-decoration: none; border: 1px solid rgba(184,149,47,.5); color: #1a1611;
+  }
+  .store.primary { background: #c9a84c; border-color: #c9a84c; }
+  .soon { color: #7a746a; font-size: .95rem; }
+  [hidden] { display: none !important; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0a0a0a; color: #f5f0e8; }
+    h1 { color: #c9a84c; }
+    .sub, .soon { color: #a8a196; }
+    .store { color: #f5f0e8; }
+    .store.primary { color: #0a0a0a; }
+  }
+</style>
+</head>
+<body>
+<h1>Huda</h1>
+<p class="sub" data-fr="Adhkar du matin et du soir, à ton rythme." data-en="Morning and evening adhkar, at your own pace.">Adhkar du matin et du soir, à ton rythme.</p>
+<div class="stores">
+  <a id="app-store" class="store primary" href="https://apps.apple.com/app/apple-store/id6798269586">App Store</a>
+  <a id="play-store" class="store" href="https://play.google.com/store/apps/details?id=com.hudhudis.huda" hidden>Google Play</a>
+  <p id="play-soon" class="soon" data-fr="Bientôt sur Android." data-en="Coming soon to Android.">Bientôt sur Android.</p>
+</div>
+<script src="links.js"></script>
+<script>
+  (function () {
+    var L = window.HudaLinks;
+    var campaign = L.campaignFrom(location.search);
+    var target = L.redirectFor(
+      L.platformOf(navigator.userAgent, navigator.maxTouchPoints),
+      campaign
+    );
+    if (target) { location.replace(target); return; }
+
+    // Ordinateur, ou Android avant la sortie sur le Play Store : la page.
+    if (!/^fr/i.test(navigator.language || '')) {
+      document.documentElement.lang = 'en';
+      document.title = 'Huda — morning and evening adhkar';
+      document.querySelectorAll('[data-en]').forEach(function (el) {
+        el.textContent = el.getAttribute('data-en');
+      });
+    }
+    document.getElementById('app-store').href = L.appStoreUrl(campaign);
+    var play = document.getElementById('play-store');
+    play.href = L.playStoreUrl(campaign);
+    play.hidden = !L.PLAY_AVAILABLE;
+    document.getElementById('play-soon').hidden = L.PLAY_AVAILABLE;
+  })();
+</script>
+</body>
+</html>
